@@ -38,6 +38,8 @@ SELECT * FROM Customers WHERE COUNTRY='Mexico' ORDER BY City, CustomerName;
 
 -- 4. Zeige  alle Kunden an, die sich in Deutschland, dem Vereinigten Königreich oder Frankreich befinden.
 SELECT * FROM Customers WHERE Country='Germany' OR Country='UK' OR Country='France';
+-- oder
+SELECT * FROM Customers WHERE Country IN ('Germany', 'UK', 'France');
 
 -- 5. Zeige alle Produkte an, die in Flaschen verkauft werden
 SELECT * FROM Products WHERE Unit LIKE '%bottles%';
