@@ -1,0 +1,92 @@
+@font-face {
+  font-family: Inter-SemiBold;
+  src: url("./assets/fonts/Inter/static/Inter-SemiBold.ttf");
+}
+@font-face {
+  font-family: Inter-Bold;
+  src: url("./assets/fonts/Inter/static/Inter-Bold.ttf");
+}
+
+:root {
+  font-family: Inter-SemiBold;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.hero {
+  background-image: url("./assets/img/hero_image.png");
+  background-repeat: no-repeat;
+}
+.hero-text {
+  font-family: Inter-Bold;
+  font-size: 40px;
+  text-align: center;
+  color: white;
+  width: 62%;
+  margin: 0 auto;
+  padding: 109px 0;
+}
+
+.most-popular {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  img {
+    height: 200px;
+  }
+}
+
+footer {
+  background-color: #ffdb63;
+  height: 273px;
+  display: flex;
+}
+
+.footer-left {
+  color: #2c2b2b;
+  width: 412px;
+  height: 273px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 109px;
+}
+
+.footer-left > h2 {
+  font-size: 46.13px;
+}
+
+.footer-social {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 275px;
+  height: 102px;
+  margin-top: 85px;
+}
+
+.footer-social > h3 {
+  font-size: 26px;
+  color: black;
+}
+
+.footer-social-logos {
+  display: flex;
+  gap: 8px;
+}
