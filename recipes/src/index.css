@@ -6,6 +6,10 @@
   font-family: Inter-Bold;
   src: url("./assets/fonts/Inter/static/Inter-Bold.ttf");
 }
+@font-face {
+  font-family: Inter-Regular;
+  src: url("./assets/fonts/Inter/static/Inter-Regular.ttf");
+}
 
 :root {
   font-family: Inter-SemiBold;
@@ -28,7 +32,21 @@ body {
   box-sizing: border-box;
 }
 
+header {
+  height: 143px;
+}
+
+.header-top {
+  height: 30px;
+  background-color: #ffdb63;
+}
+nav {
+  font-size: 26px;
+  font-family: Inter-Bold;
+}
 .hero {
+  width: 100%;
+  height: 100%;
   background-image: url("./assets/img/hero_image.png");
   background-repeat: no-repeat;
 }
@@ -39,7 +57,8 @@ body {
   color: white;
   width: 62%;
   margin: 0 auto;
-  padding: 109px 0;
+  padding: 112px 0;
+  line-height: 1.15;
 }
 
 .most-popular {
@@ -89,4 +108,14 @@ footer {
 .footer-social-logos {
   display: flex;
   gap: 8px;
+}
+
+.about-text {
+  margin: 75px 145px 83px 144px;
+  font-size: 30px;
+  font-family: Inter-Regular;
+  line-height: 1.15;
+  p:not(p:first-of-type) {
+    margin-top: 46px;
+  }
 }

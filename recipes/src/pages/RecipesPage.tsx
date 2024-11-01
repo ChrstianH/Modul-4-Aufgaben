@@ -1,3 +1,4 @@
+import Hero from "../components/Hero";
 import { supabase } from "../lib/supabase";
 import RecipePage from "./RecipePage";
 import { useEffect, useState } from "react";
@@ -49,10 +50,7 @@ export default function RecipesPage() {
 
   return (
     <div>
-      <p>
-        Lassen Sie sich inspirieren, kochen Sie mit Leidenschaft und erleben Sie
-        unvergessliche Momente bei Tisch.
-      </p>
+      <Hero />
 
       <div className="most-popular">
         if(mostPopular)
