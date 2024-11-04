@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 type Recipe = {
   category_id: string;
   created_at: string;
@@ -13,7 +15,9 @@ type Recipe = {
 export default function RecipePage(props: { recipe: Recipe }) {
   return (
     <div>
-      <img src={props.recipe?.image_url} alt={props.recipe?.name} />
+      <Link to={`/recipe/${props.recipe?.id}`}>
+        <img src={props.recipe?.image_url} alt={props.recipe?.name} />
+      </Link>
     </div>
   );
 }
