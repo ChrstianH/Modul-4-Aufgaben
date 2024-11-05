@@ -24,7 +24,7 @@ export default function HomePage() {
     const recipes = await supabase
       .from("recipes")
       .select("*")
-      .order("rating")
+      .order("rating", { ascending: false })
       .limit(3);
     return recipes;
   };
@@ -39,7 +39,7 @@ export default function HomePage() {
       <Hero />
       <div className="most-popular">
         {mostPopular?.map((recipe) => (
-          <RecipePage recipe={recipe} />
+          <RecipePage key={recipe.id} recipe={recipe} />
         ))}
       </div>
     </main>

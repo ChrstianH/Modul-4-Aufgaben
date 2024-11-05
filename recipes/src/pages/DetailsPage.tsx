@@ -7,21 +7,20 @@ type Recipe = {
   created_at: string;
   description: string;
   id: string;
-  image_url: string | null;
+  image_url: string;
   instructions: string;
   name: string;
-  rating: number | null;
+  rating: number;
   servings: number;
 } | null;
 
 export default function DetailsPage() {
   const { id } = useParams();
   console.log(id);
-  const [recipe, setRecipe] = useState<Recipe>();
+  const [recipe, setRecipe] = useState<Recipe>([]);
 
   const getRecipe = async () => {
     const recipe = await supabase.from("recipes").select("*").eq("id", id!);
-    console.log(recipe);
     return recipe;
   };
 
@@ -31,7 +30,7 @@ export default function DetailsPage() {
 
   return (
     <div>
-      <img src={recipe!.image_url} alt={recipe!.name} />
+      <img src={recipe!.image_url!} alt={recipe!.name} />
     </div>
   );
 }
