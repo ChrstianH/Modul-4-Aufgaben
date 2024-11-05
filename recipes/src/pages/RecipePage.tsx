@@ -11,10 +11,10 @@ export default function RecipePage(props: { recipe: Recipe }) {
   return (
     <div className="recipe-page">
       <Link to={`/recipe/${props.recipe!.id}`}>
-        <img src={props.recipe!.image_url} alt={props.recipe!.name} />
+        <img src={props.recipe!.image_url!} alt={props.recipe!.name} />
       </Link>
-      <div className="recipe-page-lower">
-        <h3>{props.recipe?.name}</h3>
+      <div className="info">
+        <h3>{props.recipe!.name}</h3>
         <p>{props.recipe?.description}</p>
         <Link to={`/recipe/${props.recipe!.id}`} className="to-recipe">
           Zum Rezept

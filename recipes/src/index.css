@@ -77,8 +77,8 @@ nav {
     grid-template-columns: repeat(3, 1fr);
     gap: 38px;
     justify-items: center;
-    border-radius: 33px;
     img {
+      border-radius: 33px 33px 0 0;
       width: 400px;
     }
   }
@@ -97,12 +97,13 @@ nav {
   display: flex;
   flex-direction: column;
   gap: 18px;
-  height: 212px;
+  height: 474px;
   background-color: #f5f2f2;
+  border-radius: 33px;
 }
 
-.recipe-page-lower {
-  padding: 35px 34px;
+.info {
+  padding: 29px 34px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -127,6 +128,15 @@ nav {
     border-radius: 32px;
     align-self: flex-start;
   }
+}
+
+.to-recipe {
+  font-size: 20.71px;
+  font-family: Inter-Bold;
+  padding: 9px 33px;
+  background-color: #ffdb63;
+  border-radius: 32px;
+  align-self: flex-start;
 }
 
 footer {

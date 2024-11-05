@@ -1,64 +1,35 @@
+import { QueryData } from "@supabase/supabase-js";
 import Hero from "../components/Hero";
 import { supabase } from "../lib/supabase";
 import RecipePage from "./RecipePage";
 import { useEffect, useState } from "react";
-
-type Recipes =
-  | {
-      category_id: string;
-      created_at: string;
-      description: string;
-      id: string;
-      image_url: string;
-      instructions: string;
-      name: string;
-      rating: number;
-      servings: number;
-    }[]
-  | null;
+import MostPopular from "../components/MostPopular";
 
 export default function RecipesPage() {
-  const [mostPopular, setMostPopular] = useState<Recipes>([]);
-  const [mostRecent, setMostRecent] = useState<Recipes>([]);
+  const [mostRecent, setMostRecent] = useState<RecipesData>([]);
 
-  const getMostPopularRecipes = async () => {
-    const recipes = await supabase
-      .from("recipes")
-      .select("*")
-      .order("rating", { ascending: false })
-      .limit(3);
-    return recipes;
-  };
   const getMostRecentRecipes = async () => {
     const recipes = await supabase
       .from("recipes")
-      .select("*")
+      .select("id, image_url, name, description")
       .order("created_at", { ascending: false })
       .limit(3);
     return recipes;
   };
   useEffect(() => {
-    getMostPopularRecipes().then((result) => {
-      setMostPopular(result.data);
-    });
+    getMostRecentRecipes().then((result) => setMostRecent(result.data ?? []));
   }, []);
-  useEffect(() => {
-    getMostRecentRecipes().then((result) => {
-      setMostRecent(result.data);
-    });
-  }, []);
+
+  type RecipesData = QueryData<ReturnType<typeof getMostRecentRecipes>>;
 
   return (
     <div>
       <Hero />
-
-      <div className="most-popular">
-        {mostPopular?.map((recipe) => (
-          <RecipePage recipe={recipe} />
-        ))}
-      </div>
+      <MostPopular />
 
       <div className="most-recent">
+        <h3>Die neuesten Rezepte</h3>
+
         {mostRecent?.map((recipe) => (
           <RecipePage recipe={recipe} />
         ))}

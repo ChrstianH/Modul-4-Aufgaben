@@ -3,20 +3,6 @@ import { supabase } from "../lib/supabase";
 import { useEffect, useState } from "react";
 import { QueryData } from "@supabase/supabase-js";
 
-/* 
-type Recipe = {
-  category_id: string;
-  created_at: string;
-  description: string;
-  id: string;
-  image_url: string;
-  instructions: string;
-  name: string;
-  rating: number;
-  servings: number;
-} | null;
- */
-
 export default function DetailsPage() {
   const { id } = useParams();
   console.log(id);
@@ -31,14 +17,14 @@ export default function DetailsPage() {
   };
 
   useEffect(() => {
-    getRecipe().then((result) => setRecipe(result.data![0]));
+    getRecipe().then((result) => setRecipe(result.data!));
   }, []);
 
   type RecipeData = QueryData<ReturnType<typeof getRecipe>>;
 
   return (
     <div>
-      <img src={recipe.image_url} alt={recipe.name} />
+      <img src={recipe[0].image_url!} alt={recipe[0].name} />
     </div>
   );
 }
