@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 
-type Recipe = {
-  id: string;
-  image_url: string | null;
-  name: string;
-  description: string;
-} | null;
-
-export default function RecipePage(props: { recipe: Recipe }) {
+export default function RecipePage(props: {
+  recipe: {
+    id: string;
+    image_url: string | null;
+    name: string;
+    description: string;
+  } | null;
+}) {
   return (
     <div className="recipe-page">
       <Link to={`/recipe/${props.recipe!.id}`}>

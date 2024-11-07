@@ -8,6 +8,7 @@ export default function Header() {
         <nav>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/recipes">Rezepte</NavLink>
+          <NavLink to="/add-recipes">Rezept anlegen</NavLink>
           <NavLink to="/about_us">Über uns</NavLink>
         </nav>
       </div>

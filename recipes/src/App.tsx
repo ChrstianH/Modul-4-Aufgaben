@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import RecipesPage from "./pages/RecipesPage";
 import AboutUsPage from "./pages/AboutUsPage";
 import DetailsPage from "./pages/DetailsPage";
+import RecipeCreatePage from "./pages/RecipeCreatePage";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -26,6 +27,10 @@ export default function App() {
         {
           path: "/recipe/:id",
           element: <DetailsPage />,
+        },
+        {
+          path: "/add-recipes",
+          element: <RecipeCreatePage />,
         },
       ],
     },

@@ -11,7 +11,7 @@ export default function DetailsPage() {
   const getRecipe = async () => {
     const recipe = await supabase
       .from("recipes")
-      .select("id, image_url, name")
+      .select("id, image_url, name, ingredients(*)")
       .eq("id", id!);
     return recipe;
   };
