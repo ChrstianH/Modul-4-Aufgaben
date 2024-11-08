@@ -1,14 +1,21 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "../lib/supabase";
 
 type Ingredient = {
   name: string;
-  quantity: number;
-  unit: string;
-  additional_info: string | null;
+  quantity: number | null;
+  unit: string | null;
+  additional_info?: string;
+};
+
+type Category = {
+  id: string;
+  name: string;
 };
 
 export default function RecipeCreatePage() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   const nameRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLInputElement>(null);
@@ -38,46 +45,90 @@ export default function RecipeCreatePage() {
     setIngredients(updatedIngredients);
   };
 
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault();
+    const result = await supabase
+      .from("recipes")
+      .insert({
+        name: nameRef.current!.value,
+        description: descRef.current!.value,
+        servings: portionsRef.current!.value,
+        instructions: instructionsRef.current!.value,
+        category_id: categoryRef.current!.value,
+      })
+      .select("id")
+      .single();
+
+    const iResult = await supabase.from("ingredients").insert(
+      ingredients.map((ingredient: Ingredient) => ({
+        name: ingredient.name,
+        quantity: ingredient.quantity,
+        unit: ingredient.unit,
+        additional_info: ingredient.additional_info,
+        recipe_id: result.data?.id,
+      }))
+    );
+  };
+
+  useEffect(() => {
+    getCategories();
+  }, []);
+
+  const getCategories = async () => {
+    const result = await supabase.from("categories").select("id, name");
+    console.log(result.data);
+    setCategories(result.data ?? []);
+  };
+
   return (
     <>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="name">Name</label>
-          <input type="text" name="name" id="name" ref={nameRef} />
+          <div>
+            <label htmlFor="name">Name</label>
+            <input type="text" name="name" id="name" ref={nameRef} />
+          </div>
+          <div>
+            <label htmlFor="description">Beschreibung</label>
+            <input
+              type="text"
+              name="description"
+              id="description"
+              ref={descRef}
+            />
+          </div>
+          <div>
+            <label htmlFor="portions">Anzahl der Portionen</label>
+            <input
+              type="number"
+              name="portions"
+              id="portions"
+              ref={portionsRef}
+            />
+          </div>
+          <div>
+            <label htmlFor="instructions">Anleitung</label>
+            <input
+              type="text"
+              name="instructions"
+              id="instructions"
+              ref={instructionsRef}
+            />
+          </div>
+          <div>
+            <label htmlFor="category">Kategorie</label>
+            <select name="category" id="category" ref={categoryRef}>
+              {categories.map((category: { id: string; name: string }) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div>
-          <label htmlFor="description">Beschreibung</label>
-          <input
-            type="text"
-            name="description"
-            id="description"
-            ref={descRef}
-          />
-        </div>
-        <div>
-          <label htmlFor="portions">Anzahl der Protionen</label>
-          <input
-            type="number"
-            name="portions"
-            id="portions"
-            ref={portionsRef}
-          />
-        </div>
-        <div>
-          <label htmlFor="instructions">Anleitung</label>
-          <input
-            type="text"
-            name="instructions"
-            id="instructions"
-            ref={instructionsRef}
-          />
-        </div>
-        <div>
-          <label htmlFor="category">Kategorie</label>
-          <select name="category" id="category" ref={categoryRef}>
-            <option value=""></option>
-          </select>
-        </div>
+
+        <button>Rezept anlegen</button>
+
         <div>
           <h3>Zutaten</h3>
           <div>
@@ -88,6 +139,8 @@ export default function RecipeCreatePage() {
               id="ingr_name"
               ref={ingrNameRef}
             />
+          </div>
+          <div>
             <label htmlFor="ingr_quantity">Menge</label>
             <input
               type="number"
@@ -95,6 +148,8 @@ export default function RecipeCreatePage() {
               id="ingr_quantity"
               ref={ingrQuantRef}
             />
+          </div>
+          <div>
             <label htmlFor="ingr_unit">Einheit</label>
             <input
               type="text"
@@ -102,6 +157,8 @@ export default function RecipeCreatePage() {
               id="ingr_unit"
               ref={ingrUnitRef}
             />
+          </div>
+          <div>
             <label htmlFor="ingr_info">Zusätzl. Informationen</label>
             <input
               type="text"
@@ -109,6 +166,8 @@ export default function RecipeCreatePage() {
               id="ingr_info"
               ref={ingrInfoRef}
             />
+          </div>
+          <div>
             <button type="button" onClick={createNewLine}>
               ➕
             </button>
@@ -118,8 +177,8 @@ export default function RecipeCreatePage() {
 
       <div>
         <ul>
-          {ingredients.map((ingredient: Ingredient) => (
-            <li key={ingredient.name}>
+          {ingredients.map((ingredient: Ingredient, index) => (
+            <li key={index}>
               {ingredient.quantity} {ingredient.unit} {ingredient.name}{" "}
               {ingredient.additional_info ?? ""}
             </li>
