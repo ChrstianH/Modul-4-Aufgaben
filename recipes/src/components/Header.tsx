@@ -1,13 +1,15 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
 import { supabase } from "../lib/supabase";
 
 export default function Header() {
   const { user, setUser } = useUserContext();
+  const navigate = useNavigate();
 
   const handleLogoutClick = () => {
     setUser(null);
     supabase.auth.signOut();
+    navigate("/");
   };
   return (
     <header>
@@ -21,7 +23,7 @@ export default function Header() {
         <nav>
           <NavLink to="/">Home</NavLink>
           <NavLink to="/recipes">Rezepte</NavLink>
-          <NavLink to="/add-recipes">Rezept anlegen</NavLink>
+          {user && <NavLink to="/add-recipes">Rezept anlegen</NavLink>}
           <NavLink to="/about_us">Über uns</NavLink>
           {!user && <NavLink to="/login">Login</NavLink>}
           {user && (

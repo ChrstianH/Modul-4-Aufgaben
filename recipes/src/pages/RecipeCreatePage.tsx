@@ -7,7 +7,6 @@ type Ingredient = {
   unit: string | null;
   additional_info: string | null;
 };
-
 type Category = {
   id: string;
   name: string;

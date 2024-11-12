@@ -1,23 +1,20 @@
-import { useParams } from "react-router-dom";
-import { supabase } from "../lib/supabase";
 import { useEffect, useState } from "react";
+import { supabase } from "../lib/supabase";
 import { QueryData } from "@supabase/supabase-js";
-import DetailsHero from "../components/DetailsHero";
 
-export default function DetailsPage() {
-  const { id } = useParams();
-  console.log(id);
+export default function DetailsHero(props: { recipe_id: string }) {
   const [recipe, setRecipe] = useState<RecipeData | null>(null);
 
   const getRecipe = async () => {
-    const recipe = await supabase
+    const singleRecipe = await supabase
       .from("recipes")
       .select(
         "id, image_url, name, instructions, ingredients(name, unit, quantity)"
       )
-      .eq("id", id!)
+      .eq("id", props.recipe_id)
       .single();
-    return recipe;
+    console.log(singleRecipe);
+    return singleRecipe;
   };
 
   useEffect(() => {
@@ -25,13 +22,18 @@ export default function DetailsPage() {
   }, []);
 
   type RecipeData = QueryData<ReturnType<typeof getRecipe>>;
-  console.log(recipe);
 
   if (!recipe) return;
 
+  const background = recipe.image_url;
+
+  const imgStyle = {
+    backgroundImage: `url(${background}`,
+  };
+  console.log(imgStyle);
   return (
-    <div>
-      <DetailsHero recipe_id={recipe?.id} />{" "}
+    <div className="details-hero" style={imgStyle}>
+      <h2 className="details-hero-text">{recipe?.name}</h2>
     </div>
   );
 }
