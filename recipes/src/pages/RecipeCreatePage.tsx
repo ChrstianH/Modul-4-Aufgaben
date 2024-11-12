@@ -5,7 +5,7 @@ type Ingredient = {
   name: string;
   quantity: number | null;
   unit: string | null;
-  additional_info?: string;
+  additional_info: string | null;
 };
 
 type Category = {
@@ -62,12 +62,22 @@ export default function RecipeCreatePage() {
     const iResult = await supabase.from("ingredients").insert(
       ingredients.map((ingredient: Ingredient) => ({
         name: ingredient.name,
-        quantity: ingredient.quantity,
-        unit: ingredient.unit,
-        additional_info: ingredient.additional_info,
+        quantity: ingredient.quantity || null,
+        unit: ingredient.unit || null,
+        additional_info: ingredient.additional_info || null,
         recipe_id: result.data?.id,
       }))
     );
+
+    if (result.error || iResult.error) {
+      if (iResult.error) {
+        alert(iResult.error.message);
+      } else {
+        alert(result.error?.message);
+      }
+    } else {
+      alert("Neues Rezept angelegt");
+    }
   };
 
   useEffect(() => {
@@ -76,7 +86,6 @@ export default function RecipeCreatePage() {
 
   const getCategories = async () => {
     const result = await supabase.from("categories").select("id, name");
-    console.log(result.data);
     setCategories(result.data ?? []);
   };
 

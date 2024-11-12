@@ -6,6 +6,7 @@ import AboutUsPage from "./pages/AboutUsPage";
 import DetailsPage from "./pages/DetailsPage";
 import RecipeCreatePage from "./pages/RecipeCreatePage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 export default function App() {
   const router = createBrowserRouter([
@@ -36,6 +37,10 @@ export default function App() {
         {
           path: "/login",
           element: <LoginPage />,
+        },
+        {
+          path: "/register",
+          element: <RegisterPage />,
         },
       ],
     },
