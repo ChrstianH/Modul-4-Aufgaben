@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useUserContext } from "../context/userContext";
 import { supabase } from "../lib/supabase";
 
@@ -28,7 +28,7 @@ export default function Header() {
           {!user && <NavLink to="/login">Login</NavLink>}
           {user && (
             <div className="logout">
-              <p>{user.email}</p>
+              <Link to="/profile">{user.email}</Link>
               <br />
               <button onClick={handleLogoutClick}>Logout</button>
             </div>

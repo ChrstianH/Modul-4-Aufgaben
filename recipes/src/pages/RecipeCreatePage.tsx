@@ -3,9 +3,10 @@ import { supabase } from "../lib/supabase";
 
 type Ingredient = {
   name: string;
-  quantity: number | null;
-  unit: string | null;
-  additional_info: string | null;
+  quantity?: number | null | undefined;
+  unit?: string | null | undefined;
+  additional_info?: string | null | undefined;
+  recipe_id: string | null;
 };
 type Category = {
   id: string;
@@ -36,8 +37,9 @@ export default function RecipeCreatePage() {
     const newIngredient: Ingredient = {
       name: i_name,
       quantity: Number(i_quantity),
-      unit: i_unit,
-      additional_info: i_info,
+      unit: i_unit || null,
+      additional_info: i_info || null,
+      recipe_id: null,
     };
 
     const updatedIngredients = [...ingredients, newIngredient];
@@ -51,7 +53,7 @@ export default function RecipeCreatePage() {
       .insert({
         name: nameRef.current!.value,
         description: descRef.current!.value,
-        servings: portionsRef.current!.value,
+        servings: Number(portionsRef.current!.value),
         instructions: instructionsRef.current!.value,
         category_id: categoryRef.current!.value,
       })
@@ -61,10 +63,10 @@ export default function RecipeCreatePage() {
     const iResult = await supabase.from("ingredients").insert(
       ingredients.map((ingredient: Ingredient) => ({
         name: ingredient.name,
-        quantity: ingredient.quantity || null,
+        quantity: Number(ingredient.quantity) || null,
         unit: ingredient.unit || null,
         additional_info: ingredient.additional_info || null,
-        recipe_id: result.data?.id,
+        recipe_id: result.data!.id,
       }))
     );
 

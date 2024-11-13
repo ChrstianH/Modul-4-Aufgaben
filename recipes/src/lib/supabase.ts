@@ -10,3 +10,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
   );
 }
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+
+export function getStorageURL(path: string | null) {
+  if (path === null) return null;
+  const URL = supabaseUrl + "/storage/v1/object/public/" + path;
+  return URL;
+}

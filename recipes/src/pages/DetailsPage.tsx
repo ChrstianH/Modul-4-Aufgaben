@@ -12,9 +12,7 @@ export default function DetailsPage() {
   const getRecipe = async () => {
     const recipe = await supabase
       .from("recipes")
-      .select(
-        "id, image_url, name, instructions, ingredients(name, unit, quantity)"
-      )
+      .select("id, image_url, name, instructions, ingredients(*)")
       .eq("id", id!)
       .single();
     return recipe;
@@ -25,13 +23,12 @@ export default function DetailsPage() {
   }, []);
 
   type RecipeData = QueryData<ReturnType<typeof getRecipe>>;
-  console.log(recipe);
 
   if (!recipe) return;
 
   return (
     <div>
-      <DetailsHero recipe_id={recipe?.id} />{" "}
+      <DetailsHero name={recipe?.name} image_url={recipe?.image_url} />{" "}
     </div>
   );
 }
