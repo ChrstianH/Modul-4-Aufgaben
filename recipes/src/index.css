@@ -215,7 +215,7 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 114px;
+  margin-left: 7.91%;
 }
 
 .footer-left > h2 {
@@ -227,7 +227,7 @@ footer {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  margin-left: 275px;
+  margin-left: 19.1%;
   height: 102px;
   margin-top: 85px;
 }
@@ -309,4 +309,39 @@ form {
   flex-direction: column;
   gap: 8px;
   margin-bottom: 24px;
+}
+
+.details {
+  margin: 21px 79px 48px 79px;
+}
+
+.details > .edit {
+  display: flex;
+  gap: 16px;
+  justify-content: right;
+  img {
+    width: 24px;
+  }
+}
+
+.details-instructions > h3,
+.details-add-info > h3,
+.details-ingredients > h3 {
+  font-size: 24px;
+  font-family: Inter-Bold;
+}
+.details-add-info > h3,
+.details-instructions > h3 {
+  margin-top: 24px;
+}
+article,
+ul {
+  margin-top: 24px;
+  font-size: 24px;
+  font-family: Inter-Regular;
+}
+article,
+ul > li {
+  list-style-type: none;
+  margin-left: 24px;
 }

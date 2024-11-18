@@ -5,19 +5,22 @@ import { supabase, getStorageURL } from "../lib/supabase";
 export default function ProfilePage() {
   const { user } = useUserContext();
 
+  if (!user) {
+    return;
+  }
   const fileRef = useRef<HTMLInputElement>(null);
 
   const [vorname, setVorname] = useState<string | null | undefined>("");
   const [nachname, setNachname] = useState<string | null | undefined>("");
-  const [profilePath, setProfilePath] = useState<string | undefined>("");
+  const [profilePath, setProfilePath] = useState("");
 
   const getUser = async () => {
-    const recipe = await supabase
+    const profile = await supabase
       .from("profiles")
       .select("*")
-      .eq("id", user?.id!)
+      .eq("id", user.id)
       .single();
-    return recipe;
+    return profile;
   };
 
   const handleFileUpload = async () => {
@@ -28,16 +31,16 @@ export default function ProfilePage() {
     if (file) {
       const uploadResult = await supabase.storage
         .from("profilePhotos")
-        .upload(`${user?.id}/${crypto.randomUUID()}`, file, { upsert: true });
+        .upload(`${user.id}/${crypto.randomUUID()}`, file, { upsert: true });
       imagePath = uploadResult.data?.fullPath || null;
     }
 
-    const result = await supabase
+    await supabase
       .from("profiles")
       .update({
         profilePhoto_url: imagePath,
       })
-      .eq("id", user?.id!);
+      .eq("id", user.id);
   };
 
   useEffect(() => {
@@ -48,7 +51,10 @@ export default function ProfilePage() {
     });
   }, []);
 
-  const imageURL = getStorageURL(profilePath);
+  let imageURL: string | null = null;
+  if (profilePath) {
+    imageURL = getStorageURL(profilePath);
+  }
 
   return (
     <div className="profile">

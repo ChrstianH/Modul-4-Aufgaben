@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { getStorageURL } from "../lib/supabase";
 
 export default function RecipePage(props: {
   recipe: {
@@ -8,10 +9,14 @@ export default function RecipePage(props: {
     description: string;
   } | null;
 }) {
+  const imageFullPath = getStorageURL(props.recipe!.image_url);
   return (
     <div className="recipe-page">
       <Link to={`/recipe/${props.recipe!.id}`}>
-        <img src={props.recipe!.image_url!} alt={props.recipe!.name} />
+        <img
+          src={imageFullPath || "https://placehold.co/600x900"}
+          alt={props.recipe!.name}
+        />
       </Link>
       <div className="info">
         <h3>{props.recipe!.name}</h3>

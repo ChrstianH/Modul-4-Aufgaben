@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "../lib/supabase";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUserContext } from "../context/userContext";
 
 type Ingredient = {
   name: string;
@@ -13,9 +15,12 @@ type Category = {
   name: string;
 };
 
-export default function RecipeCreatePage() {
+export default function RecipeEditPage() {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+
+  const navigate = useNavigate();
+  const { user } = useUserContext();
 
   const nameRef = useRef<HTMLInputElement>(null);
   const descRef = useRef<HTMLInputElement>(null);
@@ -29,6 +34,29 @@ export default function RecipeCreatePage() {
   const ingrInfoRef = useRef<HTMLInputElement>(null);
 
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const { id } = useParams();
+
+  const getRecipeById = async () => {
+    const recipe = await supabase
+      .from("recipes")
+      .select("*, ingredients(*)")
+      .eq("id", id!)
+      .single();
+
+    nameRef.current!.value = recipe.data?.name || "";
+    descRef.current!.value = recipe.data?.description || "";
+    portionsRef.current!.value = recipe.data?.servings.toString() || "0";
+    instructionsRef.current!.value = recipe.data?.instructions || "";
+    categoryRef.current!.value = recipe.data?.category_id || "";
+    fileRef.current!.value = recipe.data?.image_url || "";
+    console.log(fileRef.current!.value);
+    setIngredients(recipe.data!.ingredients);
+  };
+
+  useEffect(() => {
+    getRecipeById();
+  }, []);
 
   const createNewLine: React.MouseEventHandler<HTMLButtonElement> = () => {
     const i_name = ingrNameRef.current!.value;
@@ -52,25 +80,26 @@ export default function RecipeCreatePage() {
     e.preventDefault();
     const result = await supabase
       .from("recipes")
-      .insert({
+      .update({
         name: nameRef.current!.value,
         description: descRef.current!.value,
         servings: Number(portionsRef.current!.value),
         instructions: instructionsRef.current!.value,
         category_id: categoryRef.current!.value,
       })
-      .select("id")
-      .single();
+      .eq("id", id!);
 
-    const iResult = await supabase.from("ingredients").insert(
-      ingredients.map((ingredient: Ingredient) => ({
-        name: ingredient.name,
-        quantity: Number(ingredient.quantity) || null,
-        unit: ingredient.unit || null,
-        additional_info: ingredient.additional_info || null,
-        recipe_id: result.data!.id,
-      }))
-    );
+    ingredients.map(async (ingredient: Ingredient) => {
+      await supabase
+        .from("ingredients")
+        .update({
+          name: ingredient.name,
+          quantity: Number(ingredient.quantity) || null,
+          unit: ingredient.unit || null,
+          additional_info: ingredient.additional_info || null,
+        })
+        .eq("recipe_id", id!);
+    });
 
     const file = fileRef.current?.files?.[0] || null;
 
@@ -79,32 +108,38 @@ export default function RecipeCreatePage() {
     if (file) {
       const uploadResult = await supabase.storage
         .from("recipePhotos")
-        .upload(`${result.data!.id}/${crypto.randomUUID()}`, file, {
+        .upload(`${id}/${crypto.randomUUID()}`, file, {
           upsert: true,
         });
       imagePath = uploadResult.data?.fullPath || null;
     }
 
-    await supabase
-      .from("recipes")
-      .update({
-        image_url: imagePath,
-      })
-      .eq("id", result.data!.id);
-    if (result.error || iResult.error) {
-      if (iResult.error) {
-        alert(iResult.error.message);
-      } else {
-        alert(result.error?.message);
+    if (imagePath) {
+      await supabase
+        .from("recipes")
+        .update({
+          image_url: imagePath,
+        })
+        .eq("id", id!);
+    }
+
+    if (result.error) {
+      if (result.error) {
+        alert(result.error.message);
       }
     } else {
-      alert("Neues Rezept angelegt");
+      alert("Änderungen gespeichert");
     }
+    navigate("/");
   };
 
   useEffect(() => {
     getCategories();
   }, []);
+
+  if (!user) {
+    navigate("/login");
+  }
 
   const getCategories = async () => {
     const result = await supabase.from("categories").select("id, name");
@@ -159,7 +194,7 @@ export default function RecipeCreatePage() {
           </div>
         </div>
 
-        <button>Rezept anlegen</button>
+        <button>Speichern</button>
 
         <div>
           <input type="file" ref={fileRef} />
