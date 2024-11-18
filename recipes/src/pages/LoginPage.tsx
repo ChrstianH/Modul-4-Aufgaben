@@ -36,6 +36,7 @@ export default function LoginPage() {
             placeholder="Passwort"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            autoComplete={"off"}
           />
           <button>Log in</button>
         </form>

@@ -49,13 +49,21 @@ export default function RecipeEditPage() {
     portionsRef.current!.value = recipe.data?.servings.toString() || "0";
     instructionsRef.current!.value = recipe.data?.instructions || "";
     categoryRef.current!.value = recipe.data?.category_id || "";
-    fileRef.current!.value = recipe.data?.image_url || "";
-    console.log(fileRef.current!.value);
+
     setIngredients(recipe.data!.ingredients);
   };
 
   useEffect(() => {
+    console.log("UseEffect1");
     getRecipeById();
+    if (!user) {
+      navigate("/login");
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("UseEffect2");
+    getCategories();
   }, []);
 
   const createNewLine: React.MouseEventHandler<HTMLButtonElement> = () => {
@@ -133,14 +141,6 @@ export default function RecipeEditPage() {
     navigate("/");
   };
 
-  useEffect(() => {
-    getCategories();
-  }, []);
-
-  if (!user) {
-    navigate("/login");
-  }
-
   const getCategories = async () => {
     const result = await supabase.from("categories").select("id, name");
     setCategories(result.data ?? []);
@@ -194,6 +194,63 @@ export default function RecipeEditPage() {
           </div>
         </div>
 
+        <div>
+          {ingredients.map((ingredient: Ingredient, index) => (
+            <div key={index}>
+              <input
+                type="number"
+                name="ingr_quantity"
+                id="ingr_quantity"
+                ref={ingrQuantRef}
+                value={ingredient.quantity!}
+                /*                 onChange={(e) =>
+                  setIngredients((prev) => ({
+                    ...prev,
+                    quantity: e.target?.value,
+                  }))
+                }
+ */
+              />
+              <input
+                type="text"
+                name="ingr_unit"
+                id="ingr_unit"
+                ref={ingrUnitRef}
+                value={ingredient.unit!}
+                /*                 onChange={(e) =>
+                  setIngredients((prev) => ({ ...prev, unit: e.target?.value }))
+                }
+ */
+              />
+              <input
+                type="text"
+                name="ingr_name"
+                id="ingr_name"
+                ref={ingrNameRef}
+                value={ingredient.name}
+                /*                 onChange={(e) =>
+                  setIngredients((prev) => ({ ...prev, name: e.target?.value }))
+                }
+ */
+              />
+              <input
+                type="text"
+                name="ingr_info"
+                id="ingr_info"
+                ref={ingrInfoRef}
+                value={ingredient.additional_info!}
+                /*                 onChange={(e) =>
+                  setIngredients((prev) => ({
+                    ...prev,
+                    additional_info: e.target?.value,
+                  }))
+                }
+ */
+              />
+            </div>
+          ))}
+        </div>
+
         <button>Speichern</button>
 
         <div>
@@ -245,17 +302,6 @@ export default function RecipeEditPage() {
           </div>
         </div>
       </form>
-
-      <div>
-        <ul>
-          {ingredients.map((ingredient: Ingredient, index) => (
-            <li key={index}>
-              {ingredient.quantity} {ingredient.unit} {ingredient.name}{" "}
-              {ingredient.additional_info ?? ""}
-            </li>
-          ))}
-        </ul>
-      </div>
     </>
   );
 }
